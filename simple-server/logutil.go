@@ -23,6 +23,12 @@ func (lw *logWriter) WriteHeader(statusCode int) {
 }
 
 func (lm *logMux) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	// Copy whatever is in request header to response header.
+	for k, vs := range r.Header {
+		for _, v := range vs {
+			w.Header().Add(k, v)
+		}
+	}
 	versionInfo := os.Getenv("VERSION")
 	w.Header().Set("version", versionInfo)
 
